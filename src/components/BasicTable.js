@@ -37,7 +37,7 @@ export const BasicTable = () => {
     });
 
     setSearchResults(results);
-  }, [search]);
+  }, [search, data]);
 
   return (
     <>

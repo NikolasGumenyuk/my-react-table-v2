@@ -6,12 +6,12 @@ export function Headers(props) {
   return (
     <th>
       {name}
-     
-      <button onClick={() => props.onClick(props.column.accessor, 'down')}>
-      Down
+
+      <button onClick={() => props.onClick(props.column.accessor, "down")}>
+        Down
       </button>
-      <button onClick={() => props.onClick(props.column.accessor, 'up')}>
-      Up
+      <button onClick={() => props.onClick(props.column.accessor, "up")}>
+        Up
       </button>
     </th>
   );

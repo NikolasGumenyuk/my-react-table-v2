@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import MOCK_DATA from "./MOCK_DATA.json";
 import { COLUMNS } from "./columns";
 import { Headers } from "./Headers";
 import { Body } from "./Body";
+import Pagination from "./Pagination";
 
 export const BasicTable = () => {
-  const [data, setData] = React.useState(MOCK_DATA.slice(0, 10));
-  const [search, setSearch] = React.useState("");
-  const [searchResults, setSearchResults] = React.useState([]);
+  const [data, setData] = useState(MOCK_DATA);
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemPerPage] = useState(10);
   const columns = COLUMNS;
   let sortedData = data;
-
 
   const sortData = (fieldName, direction) => {
     const sortDownFunc = (a, b) =>
@@ -27,7 +29,7 @@ export const BasicTable = () => {
   const handleChange = (event) => {
     setSearch(event.target.value);
   };
-  React.useEffect(() => {
+  useEffect(() => {
     const results = data.filter((item) => {
       const valueArray = Object.values(item).map((item) =>
         (item + "").toLowerCase()
@@ -37,8 +39,15 @@ export const BasicTable = () => {
     });
 
     setSearchResults(results);
-    
   }, [search, data]);
+
+  const lastItemIndex = currentPage * itemPerPage;
+  const firstItemIndex = lastItemIndex - itemPerPage;
+  const currentItem = data.slice(firstItemIndex, lastItemIndex);
+
+  const paginate = (pageNamber) => setCurrentPage(pageNamber);
+  const nextPage = () => setCurrentPage((prev) => prev + 1);
+  const prevPage = () => setCurrentPage((prev) => prev - 1);
 
   return (
     <>
@@ -57,13 +66,34 @@ export const BasicTable = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => (
-            <tr key={index} className={search.trim().length && !!searchResults.find(s => s.id === item.id) ? 'color' : ''}>
+          {currentItem.map((item, index) => (
+            <tr
+              key={index}
+              className={
+                search.trim().length &&
+                !!searchResults.find((s) => s.id === item.id)
+                  ? "color"
+                  : ""
+              }
+            >
               <Body columns={columns} item={item} />
             </tr>
           ))}
         </tbody>
       </table>
+      <div className="pagination">
+        <button onClick={prevPage} className="arrow-button">
+          <span>←</span>
+        </button>
+        <Pagination
+          itemPerPage={itemPerPage}
+          totalItems={data.length}
+          paginate={paginate}
+        />
+        <button onClick={nextPage} className="arrow-button">
+          <span>→</span>
+        </button>
+      </div>
     </>
   );
 };

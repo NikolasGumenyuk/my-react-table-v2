@@ -5,14 +5,17 @@ export function Headers(props) {
 
   return (
     <th>
-      {name}
-
-      <button onClick={() => props.onClick(props.column.accessor, "down")}>
-        Down
-      </button>
-      <button onClick={() => props.onClick(props.column.accessor, "up")}>
-        Up
-      </button>
+      <div className="table-header">
+        <span>{name}</span>
+        <div>
+          <button onClick={() => props.onClick(props.column.accessor, "down")}>
+            ↓
+          </button>
+          <button onClick={() => props.onClick(props.column.accessor, "up")}>
+            ↑
+          </button>
+        </div>
+      </div>
     </th>
   );
 }

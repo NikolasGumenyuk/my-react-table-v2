@@ -12,8 +12,8 @@ export const COLUMNS = [
     accessor: "last_name",
   },
   {
-    header: "Date of Birth",
-    accessor: "date_of_birth",
+    header: "Email",
+    accessor: "email",
   },
   {
     header: "Country",

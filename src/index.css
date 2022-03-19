@@ -68,3 +68,10 @@ button {
   border: 1px solid gray;
   border-radius: 25%;
 }
+.chosen-pagination-button {
+  margin-right: 5px;
+  margin-top: 10px;
+  border: 1px solid gray;
+  border-radius: 25%;
+  background: gray; 
+}

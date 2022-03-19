@@ -10,7 +10,8 @@ export const BasicTable = () => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemPerPage] = useState(10);
+  const [itemPerPage, setItemPerPage] = useState(10);
+  let itemsPerPageArr = [5, 10, 20];
   const columns = COLUMNS;
   let sortedData = data;
 
@@ -57,6 +58,27 @@ export const BasicTable = () => {
         value={search}
         onChange={handleChange}
       />
+      <select
+        name="select"
+        defaultValue={itemPerPage}
+        onChange={(e) => {
+          setItemPerPage(e.target.value);
+        }}
+      >
+        {itemsPerPageArr.map((item) => (
+          <option value={item} key={item}>
+            {item}
+          </option>
+        ))}
+      </select>
+      <button
+        onClick={() => {
+          setData(MOCK_DATA);
+          setCurrentPage(1);
+        }}
+      >
+        Reset
+      </button>
       <table>
         <thead>
           <tr key="header">
@@ -89,6 +111,7 @@ export const BasicTable = () => {
           itemPerPage={itemPerPage}
           totalItems={data.length}
           paginate={paginate}
+          currentPage={currentPage}
         />
         <button onClick={nextPage} className="arrow-button">
           <span>→</span>

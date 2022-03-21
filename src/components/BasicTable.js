@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import MOCK_DATA from "./MOCK_DATA.json";
 import { COLUMNS } from "./columns";
 import { Headers } from "./Headers";
 import { Body } from "./Body";
 import Pagination from "./Pagination";
 
+let pageSizeArr = [5, 10, 20];
+
 export const BasicTable = () => {
   const [data, setData] = useState(MOCK_DATA);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemPerPage, setItemPerPage] = useState(10);
-  let itemsPerPageArr = [5, 10, 20];
+  const [pageSize, setPageSize] = useState(10);
   const columns = COLUMNS;
-  let sortedData = data;
 
   const sortData = (fieldName, direction) => {
     const sortDownFunc = (a, b) =>
@@ -24,7 +24,7 @@ export const BasicTable = () => {
 
     const selectedDirection = direction === "down" ? sortDownFunc : sortUpFunc;
 
-    setData(sortedData.slice().sort(selectedDirection));
+    setData(MOCK_DATA.slice().sort(selectedDirection));
   };
 
   const handleChange = (event) => {
@@ -42,13 +42,9 @@ export const BasicTable = () => {
     setSearchResults(results);
   }, [search, data]);
 
-  const lastItemIndex = currentPage * itemPerPage;
-  const firstItemIndex = lastItemIndex - itemPerPage;
-  const currentItem = data.slice(firstItemIndex, lastItemIndex);
-
-  const paginate = (pageNamber) => setCurrentPage(pageNamber);
-  const nextPage = () => setCurrentPage((prev) => prev + 1);
-  const prevPage = () => setCurrentPage((prev) => prev - 1);
+  const firstPageIndex = (currentPage - 1) * pageSize;
+  const lastPageIndex = firstPageIndex + pageSize;
+  const currentItem = data.slice(firstPageIndex, lastPageIndex);
 
   return (
     <>
@@ -60,12 +56,13 @@ export const BasicTable = () => {
       />
       <select
         name="select"
-        defaultValue={itemPerPage}
+        defaultValue={pageSize}
         onChange={(e) => {
-          setItemPerPage(e.target.value);
+          setCurrentPage(1);
+          setPageSize(+e.target.value);
         }}
       >
-        {itemsPerPageArr.map((item) => (
+        {pageSizeArr.map((item) => (
           <option value={item} key={item}>
             {item}
           </option>
@@ -103,20 +100,19 @@ export const BasicTable = () => {
           ))}
         </tbody>
       </table>
-      <div className="pagination">
-        <button onClick={prevPage} className="arrow-button">
-          <span>←</span>
-        </button>
-        <Pagination
-          itemPerPage={itemPerPage}
-          totalItems={data.length}
-          paginate={paginate}
-          currentPage={currentPage}
-        />
-        <button onClick={nextPage} className="arrow-button">
-          <span>→</span>
-        </button>
-      </div>
+      {/* <Pagination
+        itemPerPage={itemPerPage}
+        totalItems={data.length}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      /> */}
+      <Pagination
+        className="pagination-bar"
+        currentPage={currentPage}
+        totalCount={data.length}
+        pageSize={pageSize}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
     </>
   );
 };

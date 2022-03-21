@@ -1,4 +1,4 @@
-import React, { useState, useEffect, } from "react";
+import React, { useState, useEffect } from "react";
 import MOCK_DATA from "./MOCK_DATA.json";
 import { COLUMNS } from "./columns";
 import { Headers } from "./Headers";
@@ -100,12 +100,6 @@ export const BasicTable = () => {
           ))}
         </tbody>
       </table>
-      {/* <Pagination
-        itemPerPage={itemPerPage}
-        totalItems={data.length}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      /> */}
       <Pagination
         className="pagination-bar"
         currentPage={currentPage}

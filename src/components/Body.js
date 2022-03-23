@@ -8,7 +8,7 @@ export function Body(props) {
       return text;
     }
 
-    let field = new String(text);
+    let field = text + '';
     let reggie = new RegExp(search, "ig");
     let found = field.search(reggie) !== -1;
 

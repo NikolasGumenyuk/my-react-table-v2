@@ -44,7 +44,7 @@ export const BasicTable = () => {
 
   const firstPageIndex = (currentPage - 1) * pageSize;
   const lastPageIndex = firstPageIndex + pageSize;
-  const currentItem = data.slice(firstPageIndex, lastPageIndex);
+  const currentItem = searchResults.slice(firstPageIndex, lastPageIndex);
 
   return (
     <>
@@ -86,24 +86,17 @@ export const BasicTable = () => {
         </thead>
         <tbody>
           {currentItem.map((item, index) => (
-            <tr
-              key={index}
-              className={
-                search.trim().length &&
-                !!searchResults.find((s) => s.id === item.id)
-                  ? "color"
-                  : ""
-              }
-            >
-              <Body columns={columns} item={item} />
+            <tr key={index}>
+              <Body columns={columns} item={item} search={search} />
             </tr>
           ))}
         </tbody>
       </table>
+      <span>Total: {searchResults.length}</span>
       <Pagination
         className="pagination-bar"
         currentPage={currentPage}
-        totalCount={data.length}
+        totalCount={searchResults.length}
         pageSize={pageSize}
         onPageChange={(page) => setCurrentPage(page)}
       />

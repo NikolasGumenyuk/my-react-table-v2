@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import MOCK_DATA from "./MOCK_DATA.json";
 import { COLUMNS } from "./columns";
 import { Headers } from "./Headers";
@@ -8,43 +8,68 @@ import Pagination from "./Pagination";
 let pageSizeArr = [5, 10, 20];
 
 export const BasicTable = () => {
-  const [data, setData] = useState(MOCK_DATA);
   const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const columns = COLUMNS;
+  const [isSortDesc, setIsSortDesc] = useState(true);
+  const [sortedField, setsortedField] = useState("");
 
-  const sortData = (fieldName, direction) => {
+  const sortData = (fieldName) => {
+    if (sortedField === fieldName) {
+      setIsSortDesc((prev) => !prev);
+      return;
+    }
+    setsortedField(fieldName);
+  };
+
+  const sortedData = useMemo(() => {
     const sortDownFunc = (a, b) =>
-      a[fieldName] > b[fieldName] ? 1 : b[fieldName] > a[fieldName] ? -1 : 0;
+      a[sortedField] > b[sortedField]
+        ? 1
+        : b[sortedField] > a[sortedField]
+        ? -1
+        : 0;
 
     const sortUpFunc = (a, b) =>
-      a[fieldName] < b[fieldName] ? 1 : b[fieldName] < a[fieldName] ? -1 : 0;
+      a[sortedField] < b[sortedField]
+        ? 1
+        : b[sortedField] < a[sortedField]
+        ? -1
+        : 0;
 
-    const selectedDirection = direction === "down" ? sortDownFunc : sortUpFunc;
+    const selectedDirection = isSortDesc ? sortDownFunc : sortUpFunc;
 
-    setData(MOCK_DATA.slice().sort(selectedDirection));
-  };
+    return MOCK_DATA.slice().sort(selectedDirection);
+  }, [isSortDesc, sortedField]);
 
   const handleChange = (event) => {
     setSearch(event.target.value);
   };
-  useEffect(() => {
-    const results = data.filter((item) => {
+
+  const filteredData = useMemo(() => {
+    return sortedData.filter((item) => {
       const valueArray = Object.values(item).map((item) =>
-        (item + "").toLowerCase()
+        item.toString().toLowerCase()
       );
 
-      return !!valueArray.find((str) => str.includes(search.toLowerCase()));
+      return valueArray.some((str) => str.includes(search.toLowerCase()));
+
     });
+  }, [search, sortedData]);
 
-    setSearchResults(results);
-  }, [search, data]);
-
-  const firstPageIndex = (currentPage - 1) * pageSize;
-  const lastPageIndex = firstPageIndex + pageSize;
-  const currentItem = data.slice(firstPageIndex, lastPageIndex);
+  const firstPageIndex = useMemo(
+    () => (currentPage - 1) * pageSize,
+    [currentPage, pageSize]
+  );
+  const lastPageIndex = useMemo(
+    () => firstPageIndex + pageSize,
+    [firstPageIndex, pageSize]
+  );
+  const currentItem = useMemo(
+    () => filteredData.slice(firstPageIndex, lastPageIndex),
+    [firstPageIndex, lastPageIndex, filteredData]
+  );
 
   return (
     <>
@@ -70,7 +95,7 @@ export const BasicTable = () => {
       </select>
       <button
         onClick={() => {
-          setData(MOCK_DATA);
+          setsortedField("")
           setCurrentPage(1);
         }}
       >
@@ -80,32 +105,31 @@ export const BasicTable = () => {
         <thead>
           <tr key="header">
             {columns.map((column) => (
-              <Headers key={column.header} column={column} onClick={sortData} />
+              <Headers
+                key={column.header}
+                column={column}
+                onClick={sortData}
+                sortedField={sortedField}
+                isSortDesc={isSortDesc}
+              />
             ))}
           </tr>
         </thead>
         <tbody>
           {currentItem.map((item, index) => (
-            <tr
-              key={index}
-              className={
-                search.trim().length &&
-                !!searchResults.find((s) => s.id === item.id)
-                  ? "color"
-                  : ""
-              }
-            >
-              <Body columns={columns} item={item} />
+            <tr key={index}>
+              <Body columns={columns} item={item} search={search} />
             </tr>
           ))}
         </tbody>
       </table>
+      <span>Total: {filteredData.length}</span>
       <Pagination
         className="pagination-bar"
         currentPage={currentPage}
-        totalCount={data.length}
+        totalCount={filteredData.length}
         pageSize={pageSize}
-        onPageChange={(page) => setCurrentPage(page)}
+        onPageChange={setCurrentPage}
       />
     </>
   );

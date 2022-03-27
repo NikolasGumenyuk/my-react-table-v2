@@ -1,20 +1,15 @@
 import React from "react";
 
-export function Headers(props) {
-  const name = props.column.header;
+export function Headers({ column, isSortDesc, sortedField, onClick }) {
+  const { header, accessor } = column;
 
   return (
-    <th>
+    <th onClick={() => onClick(accessor)}>
       <div className="table-header">
-        <span>{name}</span>
-        <div>
-          <button onClick={() => props.onClick(props.column.accessor, "down")}>
-            ↓
-          </button>
-          <button onClick={() => props.onClick(props.column.accessor, "up")}>
-            ↑
-          </button>
-        </div>
+        <span>{header}</span>
+        {sortedField === accessor && (
+          <span>{isSortDesc ? "↓" : "↑"}</span>
+        )}
       </div>
     </th>
   );

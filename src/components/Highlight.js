@@ -4,7 +4,9 @@ const Highlight = ({ text, search }) => {
   let field = text.toString();
   const firstIndex = field.toLowerCase().indexOf(search.toLowerCase());
   const lastIndex = firstIndex + search.length;
-  if (!search || firstIndex === -1) {
+  const isNotFound = firstIndex === -1;
+
+  if (!search || isNotFound) {
     return text;
   }
 

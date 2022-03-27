@@ -75,3 +75,6 @@ button {
   border-radius: 25%;
   background: gray;
 }
+.highlight {
+  background-color: yellow;
+}

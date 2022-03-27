@@ -1,14 +1,12 @@
 import React from "react";
 
-export function Body(props) {
-  const { columns, item, search } = props;
-
+export const Body = ({ columns, item, search }) => {
   const highlight = (text) => {
     if (!search) {
       return text;
     }
 
-    let field = text + '';
+    let field = text.toString();
     let reggie = new RegExp(search, "ig");
     let found = field.search(reggie) !== -1;
 
@@ -23,4 +21,4 @@ export function Body(props) {
       dangerouslySetInnerHTML={{ __html: highlight(item[column.accessor]) }}
     ></td>
   ));
-}
+};

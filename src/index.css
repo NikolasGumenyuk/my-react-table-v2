@@ -46,7 +46,7 @@ tfoot td {
 }
 .table-header {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
 }
 button {
   border: none;

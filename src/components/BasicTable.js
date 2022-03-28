@@ -14,6 +14,7 @@ export const BasicTable = () => {
   const columns = COLUMNS;
   const [isSortDesc, setIsSortDesc] = useState(true);
   const [sortedField, setsortedField] = useState("");
+  const [deletedId, setDeletedId] = useState([]);
 
   const sortData = (fieldName) => {
     if (sortedField === fieldName) {
@@ -22,6 +23,30 @@ export const BasicTable = () => {
     }
     setsortedField(fieldName);
   };
+
+  const handleDelete = (item) => {
+    setDeletedId((prev) => [...prev, item.id])
+  };
+
+  const handleEdit = () => {};
+
+  const handleChange = (event) => {
+    setSearch(event.target.value);
+  };
+
+  const filteredData = useMemo(() => {
+   const existingItems = MOCK_DATA.filter((item) => {
+      return !deletedId.includes(item.id);
+    });
+
+    return existingItems.filter((item) => {
+      const valueArray = Object.values(item).map((item) =>
+        item.toString().toLowerCase()
+      );
+
+      return valueArray.some((str) => str.includes(search.toLowerCase()));
+    });
+  }, [search, deletedId]);
 
   const sortedData = useMemo(() => {
     const sortDownFunc = (a, b) =>
@@ -40,23 +65,8 @@ export const BasicTable = () => {
 
     const selectedDirection = isSortDesc ? sortDownFunc : sortUpFunc;
 
-    return MOCK_DATA.slice().sort(selectedDirection);
-  }, [isSortDesc, sortedField]);
-
-  const handleChange = (event) => {
-    setSearch(event.target.value);
-  };
-
-  const filteredData = useMemo(() => {
-    return sortedData.filter((item) => {
-      const valueArray = Object.values(item).map((item) =>
-        item.toString().toLowerCase()
-      );
-
-      return valueArray.some((str) => str.includes(search.toLowerCase()));
-
-    });
-  }, [search, sortedData]);
+    return filteredData.slice().sort(selectedDirection);
+  }, [isSortDesc, sortedField, filteredData]);
 
   const firstPageIndex = useMemo(
     () => (currentPage - 1) * pageSize,
@@ -67,9 +77,15 @@ export const BasicTable = () => {
     [firstPageIndex, pageSize]
   );
   const currentItem = useMemo(
-    () => filteredData.slice(firstPageIndex, lastPageIndex),
-    [firstPageIndex, lastPageIndex, filteredData]
+    () => sortedData.slice(firstPageIndex, lastPageIndex),
+    [firstPageIndex, lastPageIndex, sortedData]
   );
+
+  const reset = () => {
+    setsortedField("");
+    setCurrentPage(1);
+    setPageSize(10);
+  };
 
   return (
     <>
@@ -81,10 +97,9 @@ export const BasicTable = () => {
       />
       <select
         name="select"
-        defaultValue={pageSize}
+        value={pageSize}
         onChange={(e) => {
-          setCurrentPage(1);
-          setPageSize(+e.target.value);
+          setPageSize(Number(e.target.value));
         }}
       >
         {pageSizeArr.map((item) => (
@@ -93,14 +108,7 @@ export const BasicTable = () => {
           </option>
         ))}
       </select>
-      <button
-        onClick={() => {
-          setsortedField("")
-          setCurrentPage(1);
-        }}
-      >
-        Reset
-      </button>
+      <button onClick={reset}>Reset</button>
       <table>
         <thead>
           <tr key="header">
@@ -113,12 +121,17 @@ export const BasicTable = () => {
                 isSortDesc={isSortDesc}
               />
             ))}
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {currentItem.map((item, index) => (
             <tr key={index}>
               <Body columns={columns} item={item} search={search} />
+              <td>
+                <button onClick={() => handleDelete(item)}>DEL</button>
+                <button onClick={handleEdit}>EDIT</button>
+              </td>
             </tr>
           ))}
         </tbody>

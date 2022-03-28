@@ -1,19 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import classnames from "classnames";
 import { usePagination, DOTS } from "./usePagination";
 import "./pagination.css";
 
-const Pagination = (props) => {
-  const {
-    onPageChange,
-    totalCount,
-    siblingCount = 1,
-    currentPage,
-    pageSize,
-    className,
-  } = props;
-
-  const paginationRange = usePagination({
+const Pagination = ({
+  onPageChange,
+  totalCount,
+  siblingCount = 1,
+  currentPage,
+  pageSize,
+}) => {
+  const { paginationRange, totalPageCount } = usePagination({
     currentPage,
     totalCount,
     siblingCount,
@@ -29,10 +26,15 @@ const Pagination = (props) => {
   };
 
   let lastPage = paginationRange[paginationRange.length - 1];
+
+  useEffect(() => {
+    if (currentPage > totalPageCount) {
+      onPageChange(lastPage);
+    }
+  }, [totalPageCount, lastPage, currentPage, onPageChange]);
+
   return (
-    <ul
-      className={classnames("pagination-container", { [className]: className })}
-    >
+    <ul className={classnames("pagination-container")}>
       <li
         className={classnames("pagination-item", {
           disabled: currentPage === 1,
@@ -44,7 +46,7 @@ const Pagination = (props) => {
       {paginationRange.map((pageNumber, index) => {
         if (pageNumber === DOTS) {
           return (
-            <li className="pagination-item dots" key={DOTS}>
+            <li className="pagination-item dots" key={index + DOTS}>
               &#8230;
             </li>
           );

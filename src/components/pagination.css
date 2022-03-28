@@ -55,3 +55,9 @@
   background-color: transparent;
   cursor: default;
 }
+.red {
+  background-color: red;
+}
+.blue {
+  background-color: blue;
+}

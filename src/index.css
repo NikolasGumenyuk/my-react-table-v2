@@ -48,10 +48,10 @@ tfoot td {
   display: flex;
   justify-content: center;
 }
-button {
+/* button {
   border: none;
   background: transparent;
-}
+} */
 .page-item {
   margin-right: 5px;
   margin-top: 10px;

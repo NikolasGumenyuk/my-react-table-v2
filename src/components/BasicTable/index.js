@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from "react";
-import MOCK_DATA from "./MOCK_DATA.json";
-import { COLUMNS } from "./columns";
-import { Headers } from "./Headers";
-import { Body } from "./Body";
-import Pagination from "./Pagination";
+import MOCK_DATA from "../MOCK_DATA.json";
+import COLUMNS from "../columns";
+import Headers from "../Headers";
+import Body from "../Body";
+import Pagination from "../Pagination";
+import Modal from "../Modal";
 
 let pageSizeArr = [5, 10, 20];
 
@@ -15,6 +16,8 @@ export const BasicTable = () => {
   const [isSortDesc, setIsSortDesc] = useState(true);
   const [sortedField, setsortedField] = useState("");
   const [deletedId, setDeletedId] = useState([]);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [itemToEdit, setItemToEdit] = useState(null)
 
   const sortData = (fieldName) => {
     if (sortedField === fieldName) {
@@ -25,17 +28,28 @@ export const BasicTable = () => {
   };
 
   const handleDelete = (item) => {
-    setDeletedId((prev) => [...prev, item.id])
+    setItemToDelete(item)
   };
 
-  const handleEdit = () => {};
+  const handleConfirm = (itemToDelete) => {
+    setDeletedId((prev) => [...prev, itemToDelete.id]);
+    setItemToDelete(false)
+  }
+  
+  const handleCancel = () => {
+    setItemToDelete(false)
+  }
+
+  const handleEdit = (item) => {
+    setItemToEdit(item)
+  };
 
   const handleChange = (event) => {
     setSearch(event.target.value);
   };
 
   const filteredData = useMemo(() => {
-   const existingItems = MOCK_DATA.filter((item) => {
+    const existingItems = MOCK_DATA.filter((item) => {
       return !deletedId.includes(item.id);
     });
 
@@ -130,7 +144,7 @@ export const BasicTable = () => {
               <Body columns={columns} item={item} search={search} />
               <td>
                 <button onClick={() => handleDelete(item)}>DEL</button>
-                <button onClick={handleEdit}>EDIT</button>
+                <button onClick={() => handleEdit(item)}>EDIT</button>
               </td>
             </tr>
           ))}
@@ -144,6 +158,8 @@ export const BasicTable = () => {
         pageSize={pageSize}
         onPageChange={setCurrentPage}
       />
+      {(itemToDelete || itemToEdit) && 
+      (<Modal handleCancel={handleCancel} handleConfirm={handleConfirm} itemToDelete={itemToDelete} itemToEdit={itemToEdit}/>)}
     </>
   );
 };

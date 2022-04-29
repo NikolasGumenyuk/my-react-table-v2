@@ -1,4 +1,4 @@
-export const COLUMNS = [
+const COLUMNS = [
   {
     header: "Id",
     accessor: "id",
@@ -24,3 +24,5 @@ export const COLUMNS = [
     accessor: "phone",
   },
 ];
+
+export default COLUMNS;

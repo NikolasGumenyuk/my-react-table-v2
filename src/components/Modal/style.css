@@ -1,0 +1,39 @@
+.modal {
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  top: 0;
+  position: fixed;
+  background: #00000059;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal_box {
+  width: auto;
+  max-width: 300px;
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+button ~ button {
+  margin-left: 10px;
+}
+
+.button {
+  border-radius: 5px;
+  padding: 5px 10px;
+  border: 1px solid lightgray;
+}
+
+.primary {
+  background-color: lightgray;
+  color: black;
+}
+
+.danger {
+  background-color: red;
+  color: white;
+}

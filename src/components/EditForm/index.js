@@ -11,13 +11,15 @@ const styles = {
   },
 };
 
-const EditForm = () => {
+const EditForm = (itemToEdit) => {
   const { register, handleSubmit } = useForm();
 
   function onSubmit(data) {
     console.log(data); 
 
   }
+
+  console.log(itemToEdit);
 
   return (
     <div style={styles.container}>

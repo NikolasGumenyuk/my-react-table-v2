@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import classnames from "classnames";
 import { usePagination, DOTS } from "./usePagination";
-import "./pagination.css";
+import "./style.css";
 
 const Pagination = ({
   onPageChange,

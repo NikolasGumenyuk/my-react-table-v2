@@ -29,9 +29,6 @@ export const BasicTable = () => {
 
   const handleDelete = (item) => {
     setItemToDelete(item)
-    const ids = MOCK_DATA.map(element =>{
-      console.log(element.id)  }
-    )
   };
 
   const handleConfirm = (itemToDelete) => {

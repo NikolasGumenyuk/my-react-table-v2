@@ -1,13 +1,17 @@
 import React from "react";
-import DeleteForm from "../DeleteForm";
-import EditForm from "../EditForm";
+import classNames from "classnames";
 import "./style.css";
 
-const Modal = ({ handleConfirm, handleCancel, itemToDelete, itemToEdit }) => {
+const Modal = ({ children, isOpen, onClose, closable }) => {
   return (
-    <div className="modal">
-      {itemToDelete && <DeleteForm handleCancel={handleCancel} handleConfirm={handleConfirm} itemToDelete={itemToDelete}/>}
-      {itemToEdit && <EditForm itemToEdit={itemToEdit}/>}
+    <div className={classNames("modal-wrapper", { isOpen })}>
+      <div
+        className={classNames("backdrop", { closable: isOpen })}
+        onClick={onClose}
+      ></div>
+      <div className="modal">
+        {children}
+      </div>
     </div>
   );
 };

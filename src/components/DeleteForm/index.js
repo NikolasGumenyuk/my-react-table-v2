@@ -2,8 +2,8 @@ import React from "react";
 
 function DeleteForm({ handleConfirm, handleCancel, itemToDelete }) {
   return (
-    <div className="modal_box">
-      <p>You sure you wanna delete?{itemToDelete.first_name}</p>
+    <div>
+      <p>You sure you wanna delete?{itemToDelete?.first_name}</p>
       <button className="button primary" onClick={handleCancel}>
         Cancel
       </button>

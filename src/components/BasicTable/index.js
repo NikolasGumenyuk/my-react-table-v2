@@ -5,6 +5,8 @@ import Headers from "../Headers";
 import Body from "../Body";
 import Pagination from "../Pagination";
 import Modal from "../Modal";
+import DeleteForm from "../DeleteForm";
+import EditForm from "../EditForm";
 
 let pageSizeArr = [5, 10, 20];
 
@@ -17,7 +19,7 @@ export const BasicTable = () => {
   const [sortedField, setsortedField] = useState("");
   const [deletedId, setDeletedId] = useState([]);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const [itemToEdit, setItemToEdit] = useState(null)
+  const [itemToEdit, setItemToEdit] = useState(null);
 
   const sortData = (fieldName) => {
     if (sortedField === fieldName) {
@@ -28,20 +30,21 @@ export const BasicTable = () => {
   };
 
   const handleDelete = (item) => {
-    setItemToDelete(item)
+    setItemToDelete(item);
   };
 
   const handleConfirm = (itemToDelete) => {
     setDeletedId((prev) => [...prev, itemToDelete.id]);
-    setItemToDelete(false)
-  }
-  
+    setItemToDelete(false);
+  };
+
   const handleCancel = () => {
-    setItemToDelete(false)
-  }
+    setItemToDelete(false);
+    setItemToEdit(false);
+  };
 
   const handleEdit = (item) => {
-    setItemToEdit(item)
+    setItemToEdit(item);
   };
 
   const handleChange = (event) => {
@@ -158,8 +161,16 @@ export const BasicTable = () => {
         pageSize={pageSize}
         onPageChange={setCurrentPage}
       />
-      {(itemToDelete || itemToEdit) && 
-      (<Modal handleCancel={handleCancel} handleConfirm={handleConfirm} itemToDelete={itemToDelete} itemToEdit={itemToEdit}/>)}
+      <Modal isOpen={itemToDelete} onClose={handleCancel}>
+        <DeleteForm
+          handleCancel={handleCancel}
+          handleConfirm={handleConfirm}
+          itemToDelete={itemToDelete}
+        />
+      </Modal>
+      <Modal isOpen={itemToEdit} onClose={handleCancel}>
+        <EditForm itemToEdit={itemToEdit} handleCancel={handleCancel} />
+      </Modal>
     </>
   );
 };

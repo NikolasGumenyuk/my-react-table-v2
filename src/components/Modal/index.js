@@ -3,7 +3,6 @@ import classNames from "classnames";
 import "./style.css";
 
 const Modal = ({ children, isOpen, onClose, closable }) => {
-
   return (
     <div className={classNames("modal-wrapper", { isOpen })}>
       <div

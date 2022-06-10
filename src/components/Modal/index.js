@@ -9,9 +9,7 @@ const Modal = ({ children, isOpen, onClose, closable }) => {
         className={classNames("backdrop", { closable: isOpen })}
         onClick={onClose}
       ></div>
-      <div className="modal">
-        {children}
-      </div>
+      <div className="modal">{isOpen && children}</div>
     </div>
   );
 };

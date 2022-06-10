@@ -20,6 +20,7 @@ export const BasicTable = () => {
   const [deletedId, setDeletedId] = useState([]);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [itemToEdit, setItemToEdit] = useState(null);
+  const [data, setData] = useState(MOCK_DATA);
 
   const sortData = (fieldName) => {
     if (sortedField === fieldName) {
@@ -51,8 +52,13 @@ export const BasicTable = () => {
     setSearch(event.target.value);
   };
 
+  const handleSubmit = (updatedItem) => {
+    setData((prev) => prev.map((item) => item.id === updatedItem.id ? updatedItem : item))
+    setItemToEdit(null)
+  }
+
   const filteredData = useMemo(() => {
-    const existingItems = MOCK_DATA.filter((item) => {
+    const existingItems = data.filter((item) => {
       return !deletedId.includes(item.id);
     });
 
@@ -63,7 +69,7 @@ export const BasicTable = () => {
 
       return valueArray.some((str) => str.includes(search.toLowerCase()));
     });
-  }, [search, deletedId]);
+  }, [search, deletedId, data]);
 
   const sortedData = useMemo(() => {
     const sortDownFunc = (a, b) =>
@@ -169,7 +175,7 @@ export const BasicTable = () => {
         />
       </Modal>
       <Modal isOpen={itemToEdit} onClose={handleCancel}>
-        <EditForm itemToEdit={itemToEdit} handleCancel={handleCancel} />
+        <EditForm itemToEdit={itemToEdit} onSubmit={handleSubmit} />
       </Modal>
     </>
   );

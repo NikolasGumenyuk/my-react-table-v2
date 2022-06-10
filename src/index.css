@@ -29,13 +29,13 @@ table th {
   width: auto;
 }
 
-table tr:nth-child(even) {
+/* table tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
 table tr:hover {
   background-color: #ddd;
-}
+} */
 
 table th,
 tfoot td {
@@ -78,4 +78,8 @@ tfoot td {
 }
 .highlight {
   background-color: yellow;
+}
+.white-content {
+  background: #1e1e2f;
+  color: #525f7f;
 }

@@ -1,4 +1,4 @@
-export const COLUMNS = [
+const COLUMNS = [
   {
     header: "Id",
     accessor: "id",
@@ -12,8 +12,8 @@ export const COLUMNS = [
     accessor: "last_name",
   },
   {
-    header: "Date of Birth",
-    accessor: "date_of_birth",
+    header: "Email",
+    accessor: "email",
   },
   {
     header: "Country",
@@ -24,3 +24,5 @@ export const COLUMNS = [
     accessor: "phone",
   },
 ];
+
+export default COLUMNS;

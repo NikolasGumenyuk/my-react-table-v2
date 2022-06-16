@@ -29,7 +29,7 @@ const EditForm = ({ itemToEdit, onSubmit }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
           {...register("first_name", {
-            pattern: { value: nameRegex, message: "Ще б Льохой назвався" },
+            pattern: { value: nameRegex, message: "Incorrect first name" },
           })}
           placeholder="First Name"
           style={styles.input}
@@ -37,7 +37,7 @@ const EditForm = ({ itemToEdit, onSubmit }) => {
         {errors?.firstName && <span>{errors.firstName.message}</span>}
         <input
           {...register("last_name", {
-            pattern: { value: nameRegex, message: "Ще б Льохой назвався" },
+            pattern: { value: nameRegex, message: "Incorrect last name" },
           })}
           placeholder="Last Name"
           style={styles.input}
